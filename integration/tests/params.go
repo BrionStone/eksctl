@@ -102,7 +102,10 @@ func (p Params) DeleteClusters() {
 		cmd := p.EksctlDeleteClusterCmd.WithArgs(
 			"--name", clusterName,
 		)
-		Expect(cmd).To(runner.RunSuccessfully())
+		session := cmd.Start()
+		if session.ExitCode() != 1 {
+			fmt.Fprintf(GinkgoWriter, "Warning: cluster %s's deletion failed", clusterName)
+		}
 	}
 }
 
